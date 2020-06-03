@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1'], function () {
     Route::post('login', 'Api\AutenticacionController@login');
     Route::get('logout', 'Api\AutenticacionController@logout')->middleware('jwt.verify');
+    Route::get('verificarToken/{token}', 'Api\AutenticacionController@verificarToken')->middleware('jwt.verify');
     Route::group(['middleware' => ['jwt.verify', 'role:admin']], function () {
         Route::apiResource('roles', 'Api\RolesController');
         Route::apiResource('usuarios', 'Api\UsuariosController');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Services\ServicioAutenticacion;
+use Illuminate\Http\Request;
 
 class AutenticacionController extends Controller
 {
@@ -33,5 +34,16 @@ class AutenticacionController extends Controller
     public function logout()
     {
         return $this->servicio_autenticacion->logout();
+    }
+
+    /**
+     * Verifica token.
+     *
+     * @param  App\Http\Requests\Request;
+     * @return \Illuminate\Http\Response
+     */
+    public function verificarToken(Request $request)
+    {
+        return $this->servicio_autenticacion->verificarToken($request->token);
     }
 }

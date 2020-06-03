@@ -17,9 +17,17 @@ class UsuarioResource extends JsonResource
         $roles_usuario = array();
 
         foreach($this->susRoles as $rol){
+            $permisos_rol_usuario = array();
+            foreach($rol->permissions as $permiso){
+                $permisos_rol_usuario[] = array(
+                    'id'        => $permiso->id,
+                    'nombre'    => $permiso->name
+                );
+            }
             $roles_usuario[] = array(
                 'id'        => $rol->id,
                 'nombre'    => $rol->name,
+                'permisos'  => $permisos_rol_usuario
             );
         }
 

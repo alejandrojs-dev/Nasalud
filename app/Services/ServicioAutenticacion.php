@@ -6,6 +6,8 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Resources\UsuarioResource;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class ServicioAutenticacion
 {
@@ -72,5 +74,44 @@ class ServicioAutenticacion
             ], 422);
 
         }
+    }
+
+    public static function verificarToken($token)
+    {
+        try{
+
+            $usuario = JWTAuth::authenticate($token);
+            $usuario->getAllPermissions();
+
+            if(!$usuario) {
+                return response()->json([
+                    'ok' => false,
+                    'message' => 'Usuario no encontrado'
+                ], 404);
+            }
+
+            return response()->json([
+                'ok'        => true,
+                'token'     => $token,
+                'message'   => 'El token aun sigue en uso',
+                'usuario'   => new UsuarioResource($usuario),
+                'code'      => 200
+            ], 200);
+
+        } catch (JWTException $e) {
+
+            if ($e instanceof TokenInvalidException){
+
+                return response()->json(['ok' => false, 'message' => 'Token inválido', 'code' => 400], 400);
+
+            }else if ($e instanceof TokenExpiredException){
+
+                return response()->json(['ok' => false, 'message' => 'Token expirado', 'code' => 401], 401);
+
+            }else{
+                return response()->json(['ok' => false, 'message' => 'Token de autorización no encontrado', 'code' => 404], 404);
+            }
+        }
+
     }
 }
