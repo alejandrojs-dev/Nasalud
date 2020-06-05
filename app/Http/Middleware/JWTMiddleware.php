@@ -33,7 +33,7 @@ class JWTMiddleware
 
             }else if ($e instanceof TokenExpiredException){
 
-                return response()->json(['ok' => false, 'message' => 'Token expirado', 'code' => 401], 401);
+                return response()->json(['ok' => false, 'message' => 'Token expirado', 'code' => 403], 403);
 
             }else{
                 return response()->json(['ok' => false, 'message' => 'Token de autorización no encontrado', 'code' => 404], 404);
