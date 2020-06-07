@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\PizzasPedidosTrait;
 
 class Pedido extends Model
 {
+    use PizzasPedidosTrait;
+
     protected $table = 'pedidos';
 
     protected $primaryKey = 'id';
@@ -28,25 +31,14 @@ class Pedido extends Model
         return $this->belongsTo('App\Models\Usuario')->select('id', 'nombre');
     }
 
-    public function getTotalFormateadoAttribute()
-    {
-        return '$'. number_format($this->total, 2, '.', '.');
-    }
-
-    //scopes
-    public function scopeUsuarioPedido($query)
+    //Accesors
+    public function getUsuarioPedidoAttribute($query)
     {
         return $this->usuario;
     }
 
-    public function scopeCo($query, $pizza_id)
+    public function getTotalFormateadoAttribute()
     {
-        $pivot = $this->pizzas()->getTable();
-
-        $query->whereHas('pizzas', function ($q) use ($pizza_id, $pivot) {
-            $q->where("{$pivot}.id", $pizza_id);
-        })->get();
-
-        $query->select('id', 'nombre');
+        return '$'. number_format($this->total, 2, '.', '.');
     }
 }

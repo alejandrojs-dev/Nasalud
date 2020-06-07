@@ -14,30 +14,15 @@ class UsuarioResource extends JsonResource
      */
     public function toArray($request)
     {
-        $roles_usuario = array();
-
-        foreach($this->susRoles as $rol){
-            $permisos_rol_usuario = array();
-            foreach($rol->permissions as $permiso){
-                $permisos_rol_usuario[] = array(
-                    'id'        => $permiso->id,
-                    'nombre'    => $permiso->name
-                );
-            }
-            $roles_usuario[] = array(
-                'id'        => $rol->id,
-                'nombre'    => $rol->name,
-                'permisos'  => $permisos_rol_usuario
-            );
-        }
-
         return [
             'id'                    => $this->id,
             'nombre'                => $this->nombre,
             'email'                 => $this->email,
-            'roles'                 => $roles_usuario,
+            'roles'                 => $this->sus_roles,
+            'permisos'              => $this->permisos,
             'fecha_creacion'        => $this->fecha_creacion,
-            'fecha_actualizacion'   => $this->fecha_actualizacion
+            'fecha_actualizacion'   => $this->fecha_actualizacion,
+            'menus'                 => $this->menu_usuario
         ];
     }
 }

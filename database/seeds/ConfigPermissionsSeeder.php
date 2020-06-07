@@ -1,10 +1,13 @@
 <?php
 
 use App\Models\Usuario;
+use App\Models\Menu;
+use App\Models\SubMenu;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permiso;
 use Spatie\Permission\PermissionRegistrar;
-use Spatie\Permission\Models\Role;
+use App\Models\Rol;
+use Illuminate\Support\Facades\Log;
 
 class ConfigPermissionsSeeder extends Seeder
 {
@@ -20,15 +23,17 @@ class ConfigPermissionsSeeder extends Seeder
             app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
             //Create permissions
-            $permiso_nuevo_pedido = Permission::create(['name' => 'Nuevo pedido']);
-            $permiso_pedidos = Permission::create(['name' => 'Pedidos']);
+            $permiso_nuevo_pedido = Permiso::create(['name' => 'nuevo pedido']);
+            $permiso_ver_pedidos = Permiso::create(['name' => 'ver pedidos']);
+            $permiso_ver_detalle_pedido = Permiso::create(['name' => 'ver detalle pedido']);
 
             //Creando roles
-            $admin_rol = Role::create(['name' => 'admin']);
+            $admin_rol = Rol::create(['name' => 'admin']);
             $admin_rol->givePermissionTo($permiso_nuevo_pedido);
-            $admin_rol->givePermissionTo($permiso_pedidos);
+            $admin_rol->givePermissionTo($permiso_ver_pedidos);
+            $admin_rol->givePermissionTo($permiso_ver_detalle_pedido);
 
-            $empleado_rol = Role::create(['name' => 'empleado']);
+            $empleado_rol = Rol::create(['name' => 'empleado']);
             $empleado_rol->givePermissionTo($permiso_nuevo_pedido);
 
             //Creando usuarios y asignamos roles
@@ -36,22 +41,44 @@ class ConfigPermissionsSeeder extends Seeder
             $admin->nombre = 'admin';
             $admin->email = 'admin@admin.com';
             $admin->password = 'admin@admin.com';
+            $admin->esAdmin = true;
             $admin->save();
-
             $admin->assignRole($admin_rol);
-            $admin->susRoles()->attach(1);
 
             $empleado = new Usuario();
             $empleado->nombre = 'soyunempleado';
             $empleado->email = 'empleado@empleado.com';
             $empleado->password = 'empleado@empleado.com';
+            $empleado->esAdmin = false;
             $empleado->save();
-
             $empleado->assignRole($empleado_rol);
-            $empleado->susRoles()->attach(2);
+
+            //Creacion de menu
+            $menu_pedidos = new Menu();
+            $menu_pedidos->nombre = 'Pedidos';
+            $menu_pedidos->slug = 'menu-pedidos';
+            $menu_pedidos->path = '/pedidos';
+            $menu_pedidos->orden = 0;
+            $menu_pedidos->save();
+
+            $menu_nuevo_pedido = new Menu();
+            $menu_nuevo_pedido->nombre = 'Nuevo pedido';
+            $menu_nuevo_pedido->slug = 'nuevo-pedido';
+            $menu_nuevo_pedido->path = '/nuevoPedido';
+            $menu_nuevo_pedido->orden = 1;
+            $menu_nuevo_pedido->parent_id = 1;
+            $menu_nuevo_pedido->save();
+
+            $menu_ver_pedidos = new Menu();
+            $menu_ver_pedidos->nombre = 'Ver pedidos';
+            $menu_ver_pedidos->slug = 'ver-pedidos';
+            $menu_ver_pedidos->path = '/ver';
+            $menu_ver_pedidos->orden = 2;
+            $menu_ver_pedidos->parent_id = 1;
+            $menu_ver_pedidos->save();
 
         }catch(Exception $e){
-            return "Surgió un error al correr el seeder " . $e->getMessage();
+            Log::error($e->getMessage());
         }
     }
 }

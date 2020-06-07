@@ -18,16 +18,13 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('logout', 'Api\AutenticacionController@logout')->middleware('jwt.verify');
     Route::get('verificarToken/{token}', 'Api\AutenticacionController@verificarToken')->middleware('jwt.verify');
     Route::group(['middleware' => ['jwt.verify', 'role:admin']], function () {
-        Route::apiResource('roles', 'Api\RolesController');
-        Route::apiResource('usuarios', 'Api\UsuariosController');
-        Route::apiResource('pizzas', 'Api\PizzasController');
-    });
-    Route::group(['middleware' => ['jwt.verify', 'role:admin|empleado', 'permission:Nuevo pedido']], function () {
-        Route::post('pedidos', 'Api\PedidosController@store');
-        Route::delete('pedidos', 'Api\PedidosController@delete');
+        Route::delete('pedidos/{pedido}', 'Api\PedidosController@destroy');
         Route::put('pedidos', 'Api\PedidosController@update');
     });
-    Route::group(['middleware' => ['jwt.verify', 'role:admin', 'permission:Pedidos']], function () {
+    Route::group(['middleware' => ['jwt.verify', 'role:admin|empleado', 'permission:nuevo pedido']], function () {
+        Route::post('pedidos', 'Api\PedidosController@store');
+    });
+    Route::group(['middleware' => ['jwt.verify', 'role:admin', 'permission:ver pedidos|ver detalle pedido']], function () {
         Route::get('pedidos', 'Api\PedidosController@index');
         Route::get('pedidos/{pedido}', 'Api\PedidosController@show');
     });

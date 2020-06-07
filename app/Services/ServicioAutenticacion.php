@@ -35,7 +35,7 @@ class ServicioAutenticacion
                 'token'     => $token,
                 'message'   => 'Te has logueado correctamente',
                 'usuario'   => new UsuarioResource($usuario),
-                'code'      => 200
+                'code'      => 200,
             ], 200);
 
         }catch(JWTException $e){

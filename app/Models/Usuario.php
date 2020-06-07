@@ -5,23 +5,25 @@ namespace App\Models;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Traits\UsuarioMenuTrait;
+use App\Models\Permiso;
 
 class Usuario extends Authenticatable implements JWTSubject
 {
-    use HasRoles;
+    use HasRoles, UsuarioMenuTrait;
 
     protected $table = 'usuarios';
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['nombre', 'email', 'password'];
+    protected $fillable = ['nombre', 'email', 'password', 'esAdmin'];
 
     protected $hidden = ['password'];
 
     //Relaciones
-    public function susRoles()
+    public function roles()
     {
-        return $this->belongsToMany('Spatie\Permission\Models\Role', 'roles_usuarios', 'usuario_id', 'rol_id');
+        return $this->belongsToMany('App\Models\Rol', 'roles_usuarios', 'usuario_id', 'rol_id');
     }
 
     public function pedidosDadosDeAlta()
@@ -48,6 +50,23 @@ class Usuario extends Authenticatable implements JWTSubject
     public function getFechaActualizacionAttribute()
     {
         return $this->updated_at->format('Y-m-d');
+    }
+
+    public function getEsAdministradorAttribute()
+    {
+        return boolval($this->esAdmin);
+    }
+
+    public function getSusRolesAttribute()
+    {
+        return $this->roles->pluck('name')->toArray();
+    }
+
+    public function getPermisosAttribute() {
+        if($this->es_administrador) {
+            return Permiso::pluck('name')->toArray();
+        }
+        return $this->getAllPermissions()->pluck('name')->toArray();
     }
 
     //Mutators
