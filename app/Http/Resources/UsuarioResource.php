@@ -18,8 +18,7 @@ class UsuarioResource extends JsonResource
             'id'                    => $this->id,
             'nombre'                => $this->nombre,
             'email'                 => $this->email,
-            'roles'                 => $this->sus_roles,
-            'permisos'              => $this->permisos,
+            'esAdmin'               => $this->es_administrador,
             'fecha_creacion'        => $this->fecha_creacion,
             'fecha_actualizacion'   => $this->fecha_actualizacion,
             'menus'                 => $this->menu_usuario
