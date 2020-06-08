@@ -16,15 +16,27 @@ class PedidosCollection extends ResourceCollection
     {
         $pedidos = array();
 
-        foreach ($this->resource as $pedido) {
+        foreach($this->resource as $pedido) {
+            $pizzas_pedido = array();
+            foreach($pedido->pizzas as $pizza) {
+                $pizzas_pedido[] = array(
+                    'id'        => $pizza->id,
+                    'nombre'    => $pizza->nombre,
+                    'tamano'    => $pizza->tamano,
+                    'precio'    => $pizza->precio_formateado
+                );
+            }
+
             $pedidos[] = array(
                 'id'                => $pedido->id,
                 'numero_pedido'     => $pedido->numero_pedido,
+                'fecha_pedido'      => $pedido->fecha,
                 'total'             => $pedido->total_formateado,
                 'usuario_pedido'    => $pedido->usuario,
-                'pizzas_pedido'     => $pedido->pizzas_pedido
+                'pizzas_pedido'     => $pizzas_pedido
             );
         }
+
         return $pedidos;
     }
 }

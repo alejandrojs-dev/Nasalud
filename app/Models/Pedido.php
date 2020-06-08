@@ -7,8 +7,6 @@ use App\Traits\PizzasPedidosTrait;
 
 class Pedido extends Model
 {
-    use PizzasPedidosTrait;
-
     protected $table = 'pedidos';
 
     protected $primaryKey = 'id';

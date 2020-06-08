@@ -14,6 +14,15 @@ class PedidoResource extends JsonResource
      */
     public function toArray($request)
     {
+        foreach($this->pizzas as $pizza) {
+            $pizzas_pedido = array();
+            $pizzas_pedido[] = array(
+                'id' => $pizza->id,
+                'nombre' => $pizza->nombre,
+                'tamano' => $pizza->tamano,
+                'precio' => $pizza->precio_formateado
+            );
+        }
 
         return [
             'id'                    => $this->id,
@@ -21,8 +30,7 @@ class PedidoResource extends JsonResource
             'fecha_pedido'          => $this->fecha,
             'total'                 => $this->total_formateado,
             'usuario_pedido'        => $this->usuario_pedido,
-            'pizzas_pedido'         => $this->pizzas_pedido
+            'pizzas_pedido'         => $pizzas_pedido
         ];
-
     }
 }
