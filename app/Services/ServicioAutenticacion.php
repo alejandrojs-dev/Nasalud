@@ -20,11 +20,11 @@ class ServicioAutenticacion
             $token = JWTAuth::attempt($credenciales);
 
             if(!$token){
-
                 return response()->json([
                     'ok'        => false,
                     'message'   => 'Credenciales inválidas',
-                    'code'      => 401
+                    'code'      => 401,
+                    'type'      => 'login'
                 ], 401);
             }
 
@@ -76,25 +76,19 @@ class ServicioAutenticacion
         }
     }
 
-    public static function verificarToken($token)
+    public function verificarToken($token)
     {
         try{
 
-            $usuario = JWTAuth::authenticate($token);
-            $usuario->getAllPermissions();
+            JWTAuth::setToken($token);
 
-            if(!$usuario) {
-                return response()->json([
-                    'ok' => false,
-                    'message' => 'Usuario no encontrado'
-                ], 404);
+            if(!$payload = JWTAuth::getPayload()) {
+                return response()->json(['ok' => false, 'message' => 'Usuario no encontrado', 'code' => 404], 404);
             }
 
             return response()->json([
                 'ok'        => true,
-                'token'     => $token,
                 'message'   => 'El token aun sigue en uso',
-                'usuario'   => new UsuarioResource($usuario),
                 'code'      => 200
             ], 200);
 
@@ -106,7 +100,7 @@ class ServicioAutenticacion
 
             }else if ($e instanceof TokenExpiredException){
 
-                return response()->json(['ok' => false, 'message' => 'Token expirado', 'code' => 401], 401);
+                return response()->json(['ok' => false, 'message' => 'Token expirado', 'code' => 403], 403);
 
             }else{
                 return response()->json(['ok' => false, 'message' => 'Token de autorización no encontrado', 'code' => 404], 404);

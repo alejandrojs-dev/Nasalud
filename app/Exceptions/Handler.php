@@ -54,8 +54,9 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'ok'        => false,
                 'message'   => 'No estás autorizado para realizar ésta acción',
-                'code'      => 403,
-            ], 403);
+                'code'      => 401,
+                'type'      => 'permiso'
+            ], 401);
         }
 
         return parent::render($request, $exception);

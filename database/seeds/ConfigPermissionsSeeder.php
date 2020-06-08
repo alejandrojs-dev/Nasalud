@@ -2,7 +2,6 @@
 
 use App\Models\Usuario;
 use App\Models\Menu;
-use App\Models\SubMenu;
 use Illuminate\Database\Seeder;
 use App\Models\Permiso;
 use Spatie\Permission\PermissionRegistrar;
@@ -25,13 +24,11 @@ class ConfigPermissionsSeeder extends Seeder
             //Create permissions
             $permiso_nuevo_pedido = Permiso::create(['name' => 'nuevo pedido']);
             $permiso_ver_pedidos = Permiso::create(['name' => 'ver pedidos']);
-            $permiso_ver_detalle_pedido = Permiso::create(['name' => 'ver detalle pedido']);
 
             //Creando roles
             $admin_rol = Rol::create(['name' => 'admin']);
             $admin_rol->givePermissionTo($permiso_nuevo_pedido);
             $admin_rol->givePermissionTo($permiso_ver_pedidos);
-            $admin_rol->givePermissionTo($permiso_ver_detalle_pedido);
 
             $empleado_rol = Rol::create(['name' => 'empleado']);
             $empleado_rol->givePermissionTo($permiso_nuevo_pedido);

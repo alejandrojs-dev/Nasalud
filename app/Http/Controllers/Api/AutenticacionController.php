@@ -42,8 +42,8 @@ class AutenticacionController extends Controller
      * @param  App\Http\Requests\Request;
      * @return \Illuminate\Http\Response
      */
-    public function verificarToken(Request $request)
+    public function verificarToken($token)
     {
-        return $this->servicio_autenticacion->verificarToken($request->token);
+       return $this->servicio_autenticacion->verificarToken($token);
     }
 }
