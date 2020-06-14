@@ -22,6 +22,7 @@ class PizzasCollection extends ResourceCollection
                 'nombre'                => $pizza->nombre,
                 'tamano'                => $pizza->tamano,
                 'precio'                => $pizza->precio_formateado,
+                'precio_sin_formato'    => $pizza->precio_decimal,
                 'fecha_creacion'        => $pizza->fecha_creacion,
                 'fecha_actualizacion'   => $pizza->fecha_actualizacion
             );

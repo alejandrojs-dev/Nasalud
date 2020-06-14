@@ -30,7 +30,7 @@ trait UsuarioMenuTrait
                             'nombre'        => $submenu->nombre,
                             'slug'          => $submenu->slug,
                             'path'          => $menu->path . $submenu->path,
-                            'icon'          => $submenu->icon,
+                            'icono'         => $submenu->icono,
                             'habilitado'    => boolval($submenu->habilitado),
                             'orden'         => $submenu->orden
                         );
@@ -43,7 +43,7 @@ trait UsuarioMenuTrait
                         'nombre'        => $menu->nombre,
                         'slug'          => $menu->slug,
                         'path'          => $menu->path,
-                        'icon'          => $menu->icon,
+                        'icono'         => $menu->icono,
                         'habilitado'    => boolval($menu->habilitado),
                         'orden'         => $menu->orden,
                         'submenus'      => $submenus_tmp

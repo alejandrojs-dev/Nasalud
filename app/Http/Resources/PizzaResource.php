@@ -19,6 +19,7 @@ class PizzaResource extends JsonResource
             'nombre'                => $this->nombre,
             'tamano'                => $this->tamano,
             'precio'                => $this->precio_formateado,
+            'precio_sin_formato'    => $this->precio_decimal,
             'fecha_creacion'        => $this->fecha_creacion,
             'fecha_actualizacion'   => $this->fecha_actualizacion
         ];

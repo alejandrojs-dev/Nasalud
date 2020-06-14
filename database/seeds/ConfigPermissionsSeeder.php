@@ -56,6 +56,7 @@ class ConfigPermissionsSeeder extends Seeder
             $menu_pedidos->slug = 'menu-pedidos';
             $menu_pedidos->path = '/pedidos';
             $menu_pedidos->orden = 0;
+            $menu_pedidos->icono = 'gear-fill';
             $menu_pedidos->save();
 
             $menu_nuevo_pedido = new Menu();
@@ -64,6 +65,7 @@ class ConfigPermissionsSeeder extends Seeder
             $menu_nuevo_pedido->path = '/nuevoPedido';
             $menu_nuevo_pedido->orden = 1;
             $menu_nuevo_pedido->parent_id = 1;
+            $menu_nuevo_pedido->icono = 'box-seam';
             $menu_nuevo_pedido->save();
 
             $menu_ver_pedidos = new Menu();
@@ -72,6 +74,7 @@ class ConfigPermissionsSeeder extends Seeder
             $menu_ver_pedidos->path = '/ver';
             $menu_ver_pedidos->orden = 2;
             $menu_ver_pedidos->parent_id = 1;
+            $menu_ver_pedidos->icono = 'table';
             $menu_ver_pedidos->save();
 
         }catch(Exception $e){

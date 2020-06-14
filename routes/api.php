@@ -16,15 +16,16 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1'], function () {
     Route::post('login', 'Api\AutenticacionController@login');
     Route::get('logout', 'Api\AutenticacionController@logout')->middleware('jwt.verify');
-    Route::get('verificarToken/{token}', 'Api\AutenticacionController@verificarToken');
     Route::group(['middleware' => ['jwt.verify', 'role:admin']], function () {
         Route::delete('pedidos/{pedido}', 'Api\PedidosController@destroy');
         Route::put('pedidos', 'Api\PedidosController@update');
     });
     Route::group(['middleware' => ['jwt.verify', 'role:admin|empleado', 'permission:nuevo pedido']], function () {
         Route::post('pedidos', 'Api\PedidosController@store');
+        Route::get('pizzas', 'Api\PizzasController@index');
     });
     Route::group(['middleware' => ['jwt.verify', 'role:admin', 'permission:ver pedidos']], function () {
         Route::get('pedidos', 'Api\PedidosController@index');
+        Route::get('pedidos/{pedido}', 'Api\PedidosController@show');
     });
 });

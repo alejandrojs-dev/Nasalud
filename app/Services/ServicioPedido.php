@@ -20,7 +20,7 @@ class ServicioPedido
             $pedido->usuario_id         = $request->usuario_id;
             $pedido->save();
 
-            $pedido->pizzas()->attach($request->pizzas);
+            $pedido->pizzas()->attach($request->pizzas_pedido);
 
             return response()->json([
                 'ok'        => true,
@@ -66,9 +66,19 @@ class ServicioPedido
     {
         try
         {
+            $pedidos = Pedido::orderBy('numero_pedido')->paginate(5);
+
             return response()->json([
                 'ok'        => true,
-                'pedidos'   => new PedidosCollection(Pedido::all()),
+                'paginacion' => [
+                    'total'             => $pedidos->total(),
+                    'paginaActual'      => $pedidos->currentPage(),
+                    'porPagina'         => $pedidos->perPage(),
+                    'ultimaPagina'      => $pedidos->lastPage(),
+                    'from'              => $pedidos->firstItem(),
+                    'to'                => $pedidos->lastPage()
+                ],
+                'pedidos'   => new PedidosCollection($pedidos),
                 'code'      => 200
             ], 200);
 

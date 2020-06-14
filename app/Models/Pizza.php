@@ -36,5 +36,10 @@ class Pizza extends Model
         return '$'. number_format($this->precio, 2, '.', '.');
     }
 
+    public function getPrecioDecimalAttribute()
+    {
+        return (float) $this->precio;
+    }
+
 }
 

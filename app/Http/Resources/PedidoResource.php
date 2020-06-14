@@ -14,13 +14,13 @@ class PedidoResource extends JsonResource
      */
     public function toArray($request)
     {
+        $pizzas_pedido = array();
         foreach($this->pizzas as $pizza) {
-            $pizzas_pedido = array();
             $pizzas_pedido[] = array(
-                'id' => $pizza->id,
-                'nombre' => $pizza->nombre,
-                'tamano' => $pizza->tamano,
-                'precio' => $pizza->precio_formateado
+                'id'                  => $pizza->id,
+                'nombre'              => $pizza->nombre,
+                'tamano'              => $pizza->tamano,
+                'precio'              => $pizza->precio_formateado
             );
         }
 
