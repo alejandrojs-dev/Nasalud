@@ -8,10 +8,6 @@ class ServicioAutenticacion {
   async logout() {
     return await api.get('/logout')
   }
-
-  async validarToken(token) {
-    return await api.get(`/verificarToken/${token}`)
-  }
 }
 
 export default new ServicioAutenticacion()

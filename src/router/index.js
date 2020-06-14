@@ -9,7 +9,6 @@ import NotFound from '../views/NotFound.vue'
 import NoAutorizado from '../views/NoAutorizado'
 
 //Guards
-import validarTokenGuard from '../guards/validarToken.guard'
 import validarPermisosRutas from '../guards/validarPermisosRutas.guard'
 
 Vue.use(VueRouter)
@@ -31,7 +30,6 @@ const routes = [
     path: '/inicio',
     name: 'Inicio',
     component: Home,
-    //beforeEnter: validarTokenGuard,
     meta: {
       title: 'Inicio - Panel Pizzas',
       auth: true
@@ -76,8 +74,7 @@ const routes = [
     name: 'No-autorizado',
     component: NoAutorizado,
     meta: {
-      title: 'No Autorizdo - Pizzas Panel',
-      autorizado: false
+      title: 'No Autorizdo - Pizzas Panel'
     }
   }
 ]
@@ -89,12 +86,14 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const lsUsuario = localStorage.getItem('lsUsuario')
   document.title = to.meta.title
+  const lsUsuario = localStorage.getItem('lsUsuario')
   if (to.matched.some((record) => record.meta.auth) && !lsUsuario) {
     next({ name: 'Login' })
-    return
   } else {
+    if (to.name === 'Login' && lsUsuario) {
+      next({ name: 'Inicio' })
+    }
     next()
   }
 })

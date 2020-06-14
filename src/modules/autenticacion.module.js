@@ -14,11 +14,7 @@ export const autenticacion = {
       state.dataUsuario.logueado = true
       state.dataUsuario.usuario = data.usuario
       state.dataUsuario.token = data.token
-    },
-    LIMPIAR_VALORES_USUARIO: (state) => {
-      state.dataUsuario.logueado = false
-      state.dataUsuario.usuario = null
-      state.dataUsuario.token = null
+      localStorage.setItem('idUsuario', data.usuario.id)
     }
   },
   actions: {
@@ -29,12 +25,6 @@ export const autenticacion = {
     },
     async logout({ commit }) {
       const { data } = await ServicioAutenticacion.logout()
-      commit('LIMPIAR_VALORES_USUARIO')
-      return Promise.resolve(data)
-    },
-    async validarToken({ commit }, token) {
-      const { data } = await ServicioAutenticacion.validarToken(token)
-      console.log(data)
       return Promise.resolve(data)
     }
   },
@@ -44,6 +34,12 @@ export const autenticacion = {
     },
     menusUsuario: (state) => {
       if (state.dataUsuario.usuario) return state.dataUsuario.usuario.menus
+    },
+    estaLogueado: (state) => {
+      if (state.dataUsuario.logueado) return state.dataUsuario.logueado
+    },
+    usuarioLogueado: (state) => {
+      if (state.dataUsuario.usuario) return state.dataUsuario.usuario
     }
   }
 }

@@ -1,65 +1,24 @@
 <template>
   <div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <b-navbar type="light" variant="light">
       <router-link class="navbar-brand" :to="{ name: 'Inicio' }">Panel Pizzas</router-link>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item dropdown" v-for="menu in menusUsuario" :key="menu.id">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdown"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              {{ menu.nombre }}
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <router-link
-                class="dropdown-item"
-                :to="{ path: `${submenu.path}` }"
-                v-for="submenu in menu.submenus"
-                :key="submenu.id"
-                >{{ submenu.nombre }}
-              </router-link>
-            </div>
-          </li>
-        </ul>
-
-        <ul class="navbar-nav" id="navbar-login">
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdown"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              {{ nombreUsuario }}
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" @click.prevent="logout()" href="">Cerrar sesión</a>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </nav>
+      <b-navbar-nav>
+        <b-nav-item-dropdown right v-for="menu in menusUsuario" :key="menu.id">
+          <template v-slot:button-content><b-icon :icon="menu.icono" aria-hidden="true"></b-icon> {{ menu.nombre }} </template>
+          <router-link class="dropdown-item" :to="{ path: `${submenu.path}` }" v-for="submenu in menu.submenus" :key="submenu.id"
+            ><b-icon :icon="submenu.icono" aria-hidden="true"></b-icon> {{ submenu.nombre }}
+          </router-link>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+      <b-navbar-nav class="ml-auto">
+        <b-nav-item-dropdown right>
+          <template v-slot:button-content><b-icon icon="person-fill" aria-hidden="true"></b-icon> {{ nombreUsuario }} </template>
+          <b-dropdown-item @click.prevent="logout()" href=""
+            ><b-icon icon="door-closed-fill" aria-hidden="true"></b-icon> Cerrar sesión</b-dropdown-item
+          >
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+    </b-navbar>
   </div>
 </template>
 
@@ -80,14 +39,26 @@ export default {
   methods: {
     async logout() {
       try {
+        const loader = this.$loading.show({
+          container: this.fullPage ? null : this.$refs.formContainer,
+          canCancel: true,
+          transition: 'fade',
+          color: '#000',
+          loader: 'spinner'
+        })
+
         const response = await this.$store.dispatch('autenticacion/logout')
+
         if (response.ok) {
           localStorage.removeItem('lsUsuario')
+          localStorage.removeItem('lsPedidos')
+          localStorage.removeItem('idUsuario')
           this.$router.push({ name: 'Login' })
-          console.log('Bye bye!')
+          loader.hide()
         }
       } catch (e) {
         console.log(e.response)
+        loader.hide()
       }
     }
   },
@@ -98,5 +69,12 @@ export default {
 <style scoped>
 ul#navbar-login {
   margin-right: 6em;
+}
+.avatar-div {
+  margin: 2em;
+  margin-left: 6em;
+  margin-right: 6em;
+  margin-top: 2em;
+  width: 100px;
 }
 </style>

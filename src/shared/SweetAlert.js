@@ -9,8 +9,8 @@ export default class SweetAlert {
     this.timer = timer
   }
 
-  async lauchBasic() {
-    return await Swal.fire({
+  lauchBasic() {
+    return Swal.fire({
       icon: this.icono,
       title: this.titulo,
       html: this.texto,
@@ -22,8 +22,8 @@ export default class SweetAlert {
   async lauchConfirm() {
     const swalBotonesBootstrap = Swal.mixin({
       customClass: {
-        confirmButton: 'btn btn-success',
-        cancelButton: 'btn btn-danger'
+        cancelButton: 'btn btn-danger mr-1',
+        confirmButton: 'btn btn-success ml-1'
       },
       buttonsStyling: false
     })
@@ -32,9 +32,11 @@ export default class SweetAlert {
       title: this.titulo,
       text: this.texto,
       icon: this.icono,
-      showCancelButton: false,
+      showCancelButton: true,
       confirmButtonColor: '#DD6B55',
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: '<i class="fa fa-check-circle" aria-hidden="true"></i> Aceptar',
+      cancelButtonText: '<i class="fa fa-times-circle" aria-hidden="true"></i> Cancelar',
+      reverseButtons: true
     })
   }
 }

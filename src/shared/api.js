@@ -1,7 +1,7 @@
 import axios from 'axios'
 import config from '../config/app'
-import SweetAlert from '../shared/SweetAlert'
 import router from '../router/index'
+import Swal from 'sweetalert2'
 
 const api = axios.create({
   baseURL: `${config.URI_API}`,
@@ -31,39 +31,68 @@ api.interceptors.response.use(
   (response) => {
     return response
   },
-  async (error) => {
+  (error) => {
     if (error.response.status === 422) {
       const { errors } = error.response.data
       let mensaje = ''
       for (let e in errors) {
         mensaje += `${errors[e][0]} </br>`
       }
-      const sweetAlert = new SweetAlert('error', '¡Ooops!', mensaje)
-      await sweetAlert.lauchBasic()
+
+      Swal.fire({
+        icon: 'error',
+        title: '¡Ooops!',
+        html: mensaje,
+        showConfirmButton: true,
+        position: 'center'
+      })
     }
 
     if (error.response.status === 403 && error.response.statusText === 'Forbidden') {
-      const sweetAlertConfirm = new SweetAlert(
-        'warning',
-        'Sesión expirada',
-        'Tu sesión ha expirado. Serás redirigido a la página de inicio de sesión'
-      )
-      const result = await sweetAlertConfirm.lauchConfirm()
-      if (result.value) {
-        console.log('Bye bye!')
-        localStorage.removeItem('lsUsuario')
-        router.push({ name: 'Login' })
-      }
+      const swalBotonesBootstrap = Swal.mixin({
+        customClass: {
+          cancelButton: 'btn btn-danger mr-1',
+          confirmButton: 'btn btn-success ml-1'
+        },
+        buttonsStyling: false
+      })
+
+      swalBotonesBootstrap
+        .fire({
+          title: 'Sesión expirada',
+          text: 'Tu sesión ha expirado. Serás redirigido a la página de inicio de sesión',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#DD6B55',
+          cancelButtonColor: '#d33',
+          confirmButtonText: '<i class="fa fa-check-circle" aria-hidden="true"></i> Aceptar',
+          cancelButtonText: '<i class="fa fa-times-circle" aria-hidden="true"></i> Cancelar',
+          reverseButtons: true
+        })
+        .then((result) => {
+          if (result.value) {
+            localStorage.removeItem('lsUsuario')
+            localStorage.removeItem('lsPedidos')
+            localStorage.removeItem('idUsuario')
+            router.push({ name: 'Login' })
+          }
+        })
     }
 
     if (error.response.status === 401 && error.response.statusText === 'Unauthorized') {
-      if (error.type === 'login') {
+      if (error.response.data.type === 'login') {
         const mensaje = error.response.data.message
-        const sweetAlert = new SweetAlert('error', '¡Ooops!', mensaje)
-        await sweetAlert.lauchBasic()
+
+        Swal.fire({
+          icon: 'error',
+          title: '¡Ooops!',
+          html: mensaje,
+          showConfirmButton: true,
+          position: 'center'
+        })
       }
 
-      if (error.type === 'permiso') {
+      if (error.response.data.type === 'permiso') {
         router.push({ name: 'No-autorizado' })
       }
     }
